@@ -1,3 +1,11 @@
+.filter-date-btn {
+  min-width: 140px;
+  white-space: nowrap;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+}
+
 @import url('https://fonts.googleapis.com/css2?family=Poppins:wght@400;600;700&display=swap');
 
 /* ---------- Reset & Base ---------- */
@@ -342,14 +350,6 @@ a {
   font-weight: 600;
   color: #94a3b8;
   margin-bottom: 6px;
-}
-
-.filter-date-btn {
-  min-width: 140px;
-  white-space: nowrap;
-  display: inline-flex;
-  align-items: center;
-  justify-content: center;
 }
 
 /* ---------- Scan Input (large) ---------- */
