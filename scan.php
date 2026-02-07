@@ -56,7 +56,7 @@ if ($mode === 'time_out') {
             echo json_encode(['status' => 'out', 'message' => 'TIME OUT recorded for ' . $name . ' at ' . date('Y-m-d H:i:s'), 'student_name' => $name]);
             exit;
         } else {
-            echo json_encode(['status' => 'error', 'message' => 'Error saving time out', 'student_name' => $name]);
+            echo json_encode(['status' => 'error', 'message' => 'Error saving TIME OUT', 'student_name' => $name]);
             exit;
         }
     } else {

@@ -149,7 +149,7 @@ $active_page = 'students';
             <tr>
               <th>Student ID</th>
               <th>Name</th>
-              <th>Course</th>
+              <th style="width:300px;">Course</th>
               <th>Year</th>
               <th>Action</th>
             </tr>

@@ -146,10 +146,10 @@ $active_page = 'attendance';
               <td><?php echo htmlspecialchars($r['course']); ?></td>
               <td><?php echo htmlspecialchars($r['year_level']); ?></td>
               <td><?php echo htmlspecialchars($date); ?></td>
-              <td><span class="badge-status badge-in">● <?php echo htmlspecialchars($time_in); ?></span></td>
+              <td><span class="badge-status badge-in"><?php echo htmlspecialchars($time_in); ?></span></td>
               <td>
                 <?php if ($time_out): ?>
-                  <span class="badge-status badge-out">● <?php echo htmlspecialchars($time_out); ?></span>
+                  <span class="badge-status badge-out"><?php echo htmlspecialchars($time_out); ?></span>
                 <?php else: ?>
                   <span style="color:#475569;">—</span>
                 <?php endif; ?>

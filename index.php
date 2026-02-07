@@ -257,13 +257,12 @@ $active_page = 'home';
       const json = await resp.json();
 
       const cls =
-        json.status === 'in' ? 'alert-success' :
-        json.status === 'out' ? 'alert-info' :
+        (json.status === 'in' || json.status === 'out') ? 'alert-success' :
         json.status === 'not_found' ? 'alert-danger' :
         json.status === 'already' ? 'alert-warning' :
         'alert-danger';
 
-      msgDiv.innerHTML =
+      msgDiv.innerHTML =2023037242  2023037242  
         `<div class="alert-dark ${cls}">${esc(json.message)}</div>`;
     } catch {
       msgDiv.innerHTML =
