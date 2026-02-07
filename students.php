@@ -41,17 +41,25 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['student_id'])) {
     }
 }
 
+// Search
+$search = trim($_GET['search'] ?? '');
 // Pagination
 $per_page = 10;
 $page = max(1, intval($_GET['page'] ?? 1));
-$total_res = $conn->query("SELECT COUNT(*) AS cnt FROM students");
+if ($search !== '') {
+  $search_sql = $conn->real_escape_string($search);
+  $where = "WHERE student_id LIKE '%$search_sql%' OR name LIKE '%$search_sql%' OR course LIKE '%$search_sql%'";
+} else {
+  $where = '';
+}
+$total_res = $conn->query("SELECT COUNT(*) AS cnt FROM students $where");
 $total_rows = $total_res->fetch_assoc()['cnt'];
 $total_pages = max(1, ceil($total_rows / $per_page));
 $page = min($page, $total_pages);
 $offset = ($page - 1) * $per_page;
 
-// Fetch students (paginated)
-$res = $conn->query("SELECT * FROM students ORDER BY name ASC LIMIT $per_page OFFSET $offset");
+// Fetch students (paginated & filtered)
+$res = $conn->query("SELECT * FROM students $where ORDER BY name ASC LIMIT $per_page OFFSET $offset");
 $active_page = 'students';
 ?>
 <!doctype html>
@@ -123,7 +131,16 @@ $active_page = 'students';
 
     <!-- Student List -->
     <div class="card-dark">
-      <h5>Student List <span class="record-count"><?php echo $total_rows; ?> student<?php echo $total_rows !== 1 ? 's' : ''; ?></span></h5>
+      <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:18px;">
+        <h5 style="margin-bottom:0;">Student List <span class="record-count"><?php echo $total_rows; ?> student<?php echo $total_rows !== 1 ? 's' : ''; ?></span></h5>
+        <form method="GET" style="display:flex;gap:10px;align-items:center;">
+          <input type="text" name="search" class="form-input" placeholder="Search by name, ID, or course" value="<?php echo htmlspecialchars($search); ?>" style="max-width:220px;">
+          <button class="btn-primary-dark" style="padding:8px 18px;">Search</button>
+          <?php if ($search !== ''): ?>
+            <a href="students.php" class="btn-secondary-dark" style="padding:8px 18px;">Clear</a>
+          <?php endif; ?>
+        </form>
+      </div>
       <div style="overflow-x:auto;">
         <table class="table-dark-custom">
           <thead>

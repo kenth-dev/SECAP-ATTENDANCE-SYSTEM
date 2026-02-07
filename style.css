@@ -14,11 +14,16 @@
 
 body {
   font-family: "Segoe UI", Inter, Arial, sans-serif;
-  background: linear-gradient(160deg, #0a0e27 0%, #0d1b3e 40%, #111827 100%);
+  background: 
+    linear-gradient(160deg, rgba(0,0,0,0.55) 0%, rgba(20,20,30,0.45) 60%, rgba(0,0,0,0.65) 100%),
+    url('assets/blue-gradient-bg.jpg') no-repeat center center fixed;
+  background-size: cover;
   color: #e2e8f0;
   min-height: 100vh;
   overflow-x: hidden;
 }
+
+/* Removed body::before overlay, now handled in background property */
 
 a {
   text-decoration: none;
@@ -38,11 +43,10 @@ a {
   left: 0;
   width: 240px;
   height: 100vh;
-  background: rgba(15, 23, 42, 0.85);
+  background: rgba(10, 10, 15, 0.72);
   border-right: 1px solid rgba(255,255,255,0.08);
-  box-shadow: 0 1px 4px rgba(0,0,0,0.08);
-  backdrop-filter: blur(2px);
-  -webkit-backdrop-filter: blur(2px);
+  box-shadow: none;
+  /* Removed blur for performance */
   display: flex;
   flex-direction: column;
   padding: 0;
@@ -64,7 +68,7 @@ a {
   height: 44px;
   border-radius: 50%;
   object-fit: cover;
-  box-shadow: 0 2px 10px rgba(0, 0, 0, 0.4);
+  box-shadow: 0 1px 2px rgba(0,0,0,0.08);
 }
 
 .sidebar-brand span {
@@ -101,7 +105,7 @@ a {
   color: #94a3b8;
   font-size: 14px;
   font-weight: 500;
-  transition: all 0.2s ease;
+  transition: none;
 }
 
 .sidebar-nav a:hover {
@@ -110,9 +114,9 @@ a {
 }
 
 .sidebar-nav a.active {
-  background: linear-gradient(135deg, #1e3a5f, #1a2d4a);
+  background: #1e3a5f;
   color: #ffffff;
-  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.25);
+  box-shadow: none;
 }
 
 .sidebar-nav .nav-icon {
@@ -162,13 +166,12 @@ a {
 /* ---------- Cards ---------- */
 
 .card-dark {
-  background: rgba(15, 23, 42, 0.85);
+  background: rgba(10, 10, 15, 0.68);
   border: 1px solid rgba(255,255,255,0.08);
   border-radius: 10px;
   padding: 16px;
-  box-shadow: 0 1px 4px rgba(0,0,0,0.08);
-  backdrop-filter: blur(2px);
-  -webkit-backdrop-filter: blur(2px);
+  box-shadow: none;
+  /* Removed blur for performance */
   margin-bottom: 12px;
 }
 
@@ -204,7 +207,7 @@ a {
 }
 
 .table-dark-custom tbody tr {
-  transition: background 0.15s ease;
+  transition: none;
 }
 
 .table-dark-custom tbody tr:hover {
@@ -225,7 +228,7 @@ a {
 
 /* ---------- Buttons ---------- */
 .btn-primary-dark {
-  background: linear-gradient(135deg, #1e3a5f, #143050);
+  background: #1e3a5f;
   color: #ffffff;
   border: 1px solid rgba(255, 255, 255, 0.1);
   padding: 10px 20px;
@@ -233,20 +236,20 @@ a {
   font-size: 14px;
   font-weight: 600;
   cursor: pointer;
-  transition: all 0.2s ease;
+  transition: none;
   display: inline-flex;
   align-items: center;
   gap: 6px;
 }
 
 .btn-primary-dark:hover {
-  background: linear-gradient(135deg, #254b7a, #1a3d60);
-  box-shadow: 0 2px 12px rgba(30, 58, 95, 0.4);
+  background: #254b7a;
+  box-shadow: none;
   color: #ffffff;
 }
 
 .btn-success-dark {
-  background: linear-gradient(135deg, #065f46, #064e3b);
+  background: #065f46;
   color: #ffffff;
   border: 1px solid rgba(16, 185, 129, 0.2);
   padding: 10px 20px;
@@ -254,20 +257,20 @@ a {
   font-size: 14px;
   font-weight: 600;
   cursor: pointer;
-  transition: all 0.2s ease;
+  transition: none;
   display: inline-flex;
   align-items: center;
   gap: 6px;
 }
 
 .btn-success-dark:hover {
-  background: linear-gradient(135deg, #047857, #065f46);
-  box-shadow: 0 2px 12px rgba(6, 95, 70, 0.4);
+  background: #047857;
+  box-shadow: none;
   color: #ffffff;
 }
 
 .btn-danger-dark {
-  background: linear-gradient(135deg, #991b1b, #7f1d1d);
+  background: #991b1b;
   color: #ffffff;
   border: 1px solid rgba(239, 68, 68, 0.2);
   padding: 10px 20px;
@@ -275,15 +278,15 @@ a {
   font-size: 14px;
   font-weight: 600;
   cursor: pointer;
-  transition: all 0.2s ease;
+  transition: none;
   display: inline-flex;
   align-items: center;
   gap: 6px;
 }
 
 .btn-danger-dark:hover {
-  background: linear-gradient(135deg, #b91c1c, #991b1b);
-  box-shadow: 0 2px 12px rgba(153, 27, 27, 0.4);
+  background: #b91c1c;
+  box-shadow: none;
   color: #ffffff;
 }
 
@@ -296,14 +299,14 @@ a {
   font-size: 14px;
   font-weight: 600;
   cursor: pointer;
-  transition: all 0.2s ease;
+  transition: none;
   display: inline-flex;
   align-items: center;
   gap: 6px;
 }
 
 .btn-secondary-dark:hover {
-  background: rgba(255, 255, 255, 0.1);
+  background: #222b3a;
   color: #e2e8f0;
 }
 
@@ -328,7 +331,7 @@ a {
 .form-input:focus {
   outline: none;
   border-color: #3b82f6;
-  box-shadow: 0 0 0 3px rgba(59, 130, 246, 0.15);
+  box-shadow: none;
   background: rgba(255, 255, 255, 0.07);
 }
 
