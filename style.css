@@ -1,12 +1,6 @@
-.filter-date-btn {
-  min-width: 140px;
-  white-space: nowrap;
-  display: inline-flex;
-  align-items: center;
-  justify-content: center;
-}
-
 @import url('https://fonts.googleapis.com/css2?family=Poppins:wght@400;600;700&display=swap');
+
+
 
 /* ---------- Reset & Base ---------- */
 *,
@@ -202,13 +196,14 @@ a {
 
 .table-dark-custom thead th {
   color: #94a3b8;
-  font-size: 12px;
+  font-size: 14px;
   font-weight: 600;
   text-transform: uppercase;
   letter-spacing: 0.5px;
-  padding: 14px 16px;
+  padding: 12px 16px;
   border-bottom: 1px solid rgba(255, 255, 255, 0.06);
   white-space: nowrap;
+  text-align: left;
 }
 
 .table-dark-custom tbody tr {
@@ -225,6 +220,7 @@ a {
   color: #cbd5e1;
   border-bottom: 1px solid rgba(255, 255, 255, 0.04);
   vertical-align: middle;
+  text-align: left;
 }
 
 .table-dark-custom tbody tr:last-child td {
@@ -245,6 +241,14 @@ a {
   display: inline-flex;
   align-items: center;
   gap: 6px;
+}
+
+.filter-date-btn {
+  min-width: 140px;
+  white-space: nowrap;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
 }
 
 .btn-primary-dark:hover {

@@ -46,25 +46,55 @@ $search = trim($_GET['search'] ?? '');
 // Pagination
 $per_page = 10;
 $page = max(1, intval($_GET['page'] ?? 1));
+
 if ($search !== '') {
   $search_words = preg_split('/\s+/', $search);
   $where_clauses = [];
+  $types = '';
+  $params = [];
   foreach ($search_words as $word) {
-    $word_sql = $conn->real_escape_string($word);
-    $where_clauses[] = "(LOWER(student_id) LIKE '%$word_sql%' OR LOWER(name) LIKE '%$word_sql%' OR LOWER(course) LIKE '%$word_sql%')";
+    // Build WHERE clause using placeholders and bind '%word%' values
+    $where_clauses[] = "(LOWER(student_id) LIKE ? OR LOWER(name) LIKE ? OR LOWER(course) LIKE ?)";
+    $pattern = '%' . strtolower($word) . '%';
+    $params[] = $pattern;
+    $params[] = $pattern;
+    $params[] = $pattern;
+    $types .= 'sss';
   }
-  $where = 'WHERE ' . implode(' AND ', $where_clauses);
-} else {
-  $where = '';
-}
-$total_res = $conn->query("SELECT COUNT(*) AS cnt FROM students $where");
-$total_rows = $total_res->fetch_assoc()['cnt'];
-$total_pages = max(1, ceil($total_rows / $per_page));
-$page = min($page, $total_pages);
-$offset = ($page - 1) * $per_page;
+  $where_sql = 'WHERE ' . implode(' AND ', $where_clauses);
 
-// Fetch students (paginated & filtered)
-$res = $conn->query("SELECT * FROM students $where ORDER BY name ASC LIMIT $per_page OFFSET $offset");
+  // Total count with prepared statement
+  $sql_count = "SELECT COUNT(*) AS cnt FROM students $where_sql";
+  $stmt = $conn->prepare($sql_count);
+  if ($types !== '' && !empty($params)) {
+    $stmt->bind_param($types, ...$params);
+  }
+  $stmt->execute();
+  $total_res = $stmt->get_result();
+  $total_rows = (int)$total_res->fetch_assoc()['cnt'];
+  $total_pages = max(1, ceil($total_rows / $per_page));
+  $page = min($page, $total_pages);
+  $offset = ($page - 1) * $per_page;
+
+  // Fetch students (paginated & filtered) with prepared statement
+  $sql_select = "SELECT * FROM students $where_sql ORDER BY name ASC LIMIT ? OFFSET ?";
+  $stmt = $conn->prepare($sql_select);
+  $types_with_pagination = $types . 'ii';
+  $params_with_pagination = array_merge($params, [$per_page, $offset]);
+  $stmt->bind_param($types_with_pagination, ...$params_with_pagination);
+  $stmt->execute();
+  $res = $stmt->get_result();
+} else {
+  // No search: simple queries without user-controlled WHERE conditions
+  $total_res = $conn->query("SELECT COUNT(*) AS cnt FROM students");
+  $total_rows = (int)$total_res->fetch_assoc()['cnt'];
+  $total_pages = max(1, ceil($total_rows / $per_page));
+  $page = min($page, $total_pages);
+  $offset = ($page - 1) * $per_page;
+
+  // Fetch students (paginated) without filters
+  $res = $conn->query("SELECT * FROM students ORDER BY name ASC LIMIT $per_page OFFSET $offset");
+}
 $active_page = 'students';
 ?>
 <!doctype html>
@@ -149,7 +179,7 @@ $active_page = 'students';
             <tr>
               <th>Student ID</th>
               <th>Name</th>
-              <th>Course</th>
+              <th style="width:300px;">Course</th>
               <th>Year</th>
               <th>Action</th>
             </tr>

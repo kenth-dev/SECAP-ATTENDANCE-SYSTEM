@@ -257,8 +257,7 @@ $active_page = 'home';
       const json = await resp.json();
 
       const cls =
-        json.status === 'in' ? 'alert-success' :
-        json.status === 'out' ? 'alert-info' :
+        (json.status === 'in' || json.status === 'out') ? 'alert-success' :
         json.status === 'not_found' ? 'alert-danger' :
         json.status === 'already' ? 'alert-warning' :
         'alert-danger';

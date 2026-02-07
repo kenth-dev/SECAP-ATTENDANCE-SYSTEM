@@ -34,10 +34,35 @@ if ($res->num_rows === 0) {
 $row = $res->fetch_assoc();
 $name = $row['name'];
 
-// Ensure `time_out` column exists (add if missing)
+// Ensure `time_out` column exists (add if missing) in a concurrency-safe way
 $col = $conn->query("SHOW COLUMNS FROM attendance LIKE 'time_out'");
-if ($col && $col->num_rows === 0) {
-    $conn->query("ALTER TABLE attendance ADD COLUMN time_out DATETIME NULL");
+if ($col === false) {
+    echo json_encode(['status' => 'error', 'message' => 'Database error while checking attendance schema']);
+    exit;
+}
+if ($col->num_rows === 0) {
+    // Acquire an advisory lock so only one request attempts the ALTER at a time
+    $lockResult = $conn->query("SELECT GET_LOCK('attendance_time_out_migration', 10) AS l");
+    if ($lockResult && ($lockRow = $lockResult->fetch_assoc()) && (int)$lockRow['l'] === 1) {
+        // Re-check inside the lock to avoid racing with another process
+        $colLocked = $conn->query("SHOW COLUMNS FROM attendance LIKE 'time_out'");
+        if ($colLocked === false) {
+            $conn->query("SELECT RELEASE_LOCK('attendance_time_out_migration')");
+            echo json_encode(['status' => 'error', 'message' => 'Database error while checking attendance schema']);
+            exit;
+        }
+        if ($colLocked->num_rows === 0) {
+            if (!$conn->query("ALTER TABLE attendance ADD COLUMN time_out DATETIME NULL")) {
+                // Ignore "duplicate column name" (1060) as it just means another process added it first
+                if ($conn->errno !== 1060) {
+                    $conn->query("SELECT RELEASE_LOCK('attendance_time_out_migration')");
+                    echo json_encode(['status' => 'error', 'message' => 'Database error while updating attendance schema']);
+                    exit;
+                }
+            }
+        }
+        $conn->query("SELECT RELEASE_LOCK('attendance_time_out_migration')");
+    }
 }
 
 // ===== HANDLE TIME OUT MODE =====
@@ -56,7 +81,7 @@ if ($mode === 'time_out') {
             echo json_encode(['status' => 'out', 'message' => 'TIME OUT recorded for ' . $name . ' at ' . date('Y-m-d H:i:s'), 'student_name' => $name]);
             exit;
         } else {
-            echo json_encode(['status' => 'error', 'message' => 'Error saving time out', 'student_name' => $name]);
+            echo json_encode(['status' => 'error', 'message' => 'Error saving TIME OUT', 'student_name' => $name]);
             exit;
         }
     } else {
