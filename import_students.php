@@ -30,7 +30,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_FILES['csvfile'])) {
         $imported_names[] = $name;
       }
       $conn->commit();
-      $msg = "Import finished.";
+      $msg = "<span style='color:#22c55e;font-weight:600;'>Import finished.</span>";
         } catch (Exception $e) {
             $conn->rollback();
             $msg = "Import failed: " . $e->getMessage();
@@ -63,19 +63,12 @@ $active_page = 'students';
     </div>
 
     <?php if ($msg): ?>
-      <div class="alert-dark alert-info" style="margin-bottom:16px;"><?php echo htmlspecialchars($msg); ?></div>
-    <?php endif; ?>
-
-    <?php if (!empty($imported_names)): ?>
-      <div class="alert-dark alert-success" style="margin-bottom:16px;">
-        <strong>Imported students:</strong>
-        <ul style="margin:8px 0 0 18px; padding:0;">
-          <?php foreach ($imported_names as $n): ?>
-            <li><?php echo htmlspecialchars($n); ?></li>
-          <?php endforeach; ?>
-        </ul>
+      <div class="alert-dark <?php echo (strpos($msg, 'Import finished.') !== false) ? 'alert-success' : 'alert-info'; ?>" style="margin-bottom:16px;">
+        <?php echo strip_tags($msg); ?>
       </div>
     <?php endif; ?>
+
+    <!-- ...existing code... -->
 
     <div class="card-dark" style="max-width:560px;">
       <h5>Upload CSV</h5>
@@ -91,12 +84,52 @@ $active_page = 'students';
       </form>
     </div>
 
-    <div class="card-dark" style="max-width:560px;">
+    <div class="card-dark" style="max-width:560px; text-align:center;">
       <h5>CSV Format Sample</h5>
-      <div class="code-block">student_id,name,course,year_level
-2300247,Jason Bagunu,BSIT,3
-2025002,Ana Cruz,BSIT,3</div>
+      <div style="overflow-x:auto; display:flex; justify-content:center;">
+        <table class="table-dark-custom" style="width:auto; margin-bottom:0;">
+          <thead>
+            <tr>
+              <th>student_id</th>
+              <th>name</th>
+              <th>course</th>
+              <th>year_level</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr>
+              <td>2303724</td>
+              <td>Kenneth Gasmen</td>
+              <td>BSCS</td>
+              <td>3</td>
+            </tr>
+            <tr>
+              <td>2300247</td>
+              <td>Jason Bagunu</td>
+              <td>BSIT</td>
+              <td>3</td>
+            </tr>
+            <tr>
+              <td>2025002</td>
+              <td>Ana Cruz</td>
+              <td>BSIT</td>
+              <td>3</td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
     </div>
+
+    <?php if (!empty($imported_names)): ?>
+      <div class="alert-dark alert-success" style="margin-bottom:16px;">
+        <strong>Imported students:</strong>
+        <ul style="margin:8px 0 0 18px; padding:0;">
+          <?php foreach ($imported_names as $n): ?>
+            <li><?php echo htmlspecialchars($n); ?></li>
+          <?php endforeach; ?>
+        </ul>
+      </div>
+    <?php endif; ?>
 
   </main>
 </div>
