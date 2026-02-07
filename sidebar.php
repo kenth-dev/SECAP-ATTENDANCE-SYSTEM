@@ -8,7 +8,12 @@
 
   <div class="sidebar-brand">
     <img src="assets/secap.png" alt="SECAP">
-    <span><h2><strong>SECAP</strong></h2><small>Attendance System</small></span>
+    <span>
+      <h2 style="font-family: 'Montserrat', Arial, sans-serif; letter-spacing: 2px; font-weight: 800; margin-bottom: 0;">
+        <strong>SECAP</strong>
+      </h2>
+      <small style="font-family: 'Montserrat', Arial, sans-serif; color: #94a3b8;">Attendance System</small>
+    </span>
   </div>
 
   <ul class="sidebar-nav">
@@ -43,7 +48,7 @@
   </ul>
 
   <div class="sidebar-footer">
-    &copy; <?php echo date('Y'); ?> SECAP - @kenth-dev
+    &copy; <?php echo date('Y'); ?> SECAP
   </div>
 
 </aside>

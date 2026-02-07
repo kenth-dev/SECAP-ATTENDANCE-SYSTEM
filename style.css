@@ -11,6 +11,18 @@
   padding: 0;
 }
 
+html, body {
+  min-height: 100vh;
+  min-width: 100vw;
+  width: 100vw;
+  height: 100vh;
+  margin: 0;
+  padding: 0;
+  background: radial-gradient(ellipse at 60% 40%, #1a225a 0%, #0a1124 100%);
+  background-color: #0a1124;
+  overflow-x: hidden;
+}
+
 body {
   font-family: 'Poppins', 'Segoe UI', Inter, Arial, sans-serif;
   background: 
@@ -22,16 +34,10 @@ body {
   overflow-x: hidden;
 }
 
-/* Removed body::before overlay, now handled in background property */
-
-a {
-  text-decoration: none;
-}
-
-/* ---------- Layout ---------- */
 .app-wrapper {
   display: flex;
   min-height: 100vh;
+  min-width: 100vw;
 }
 
 /* ---------- Sidebar ---------- */
@@ -697,4 +703,26 @@ input[type="date"].form-input {
 
 ::-webkit-scrollbar-thumb:hover {
   background: rgba(255, 255, 255, 0.2);
+}
+
+.sidebar a,
+.sidebar-nav a,
+.sidebar a:visited,
+.sidebar a:active,
+.sidebar a:focus,
+.sidebar a:hover,
+button,
+.btn-primary-dark,
+.btn-success-dark,
+.btn-danger-dark,
+.btn-secondary-dark {
+  text-decoration: none !important;
+}
+
+.mode-toggle a,
+.mode-toggle a:visited,
+.mode-toggle a:active,
+.mode-toggle a:focus,
+.mode-toggle a:hover {
+  text-decoration: none !important;
 }
