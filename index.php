@@ -164,11 +164,25 @@ $active_page = 'home';
   const msgDiv = document.getElementById('scanMessage');
   const modeInput = document.getElementById('modeInput');
 
-  window.onload = () => { barcodeInput.focus(); };
-  window.addEventListener('click', () => barcodeInput.focus());
+  let scanTimer = null;
+  const SCAN_DELAY = 80;
+
+  window.addEventListener('load', () => barcodeInput.focus());
+  document.addEventListener('click', () => barcodeInput.focus());
+
+  barcodeInput.addEventListener('input', () => {
+    clearTimeout(scanTimer);
+
+    scanTimer = setTimeout(() => {
+      if (barcodeInput.value.trim() !== '') {
+        form.requestSubmit();
+      }
+    }, SCAN_DELAY);
+  });
 
   form.addEventListener('submit', async (e) => {
     e.preventDefault();
+
     const code = barcodeInput.value.trim();
     if (!code) return;
 
@@ -176,24 +190,39 @@ $active_page = 'home';
       const data = new FormData();
       data.append('barcode', code);
       data.append('mode', modeInput.value);
-      const resp = await fetch('scan.php', { method: 'POST', body: data });
+
+      const resp = await fetch('scan.php', {
+        method: 'POST',
+        body: data
+      });
+
       const json = await resp.json();
 
-      const cls = json.status === 'in' ? 'alert-success'
-                : json.status === 'out' ? 'alert-info'
-                : json.status === 'not_found' ? 'alert-danger'
-                : json.status === 'already' ? 'alert-warning'
-                : 'alert-danger';
-      msgDiv.innerHTML = `<div class="alert-dark ${cls}">${esc(json.message)}</div>`;
-    } catch (err) {
-      msgDiv.innerHTML = `<div class="alert-dark alert-danger">Network error</div>`;
+      const cls =
+        json.status === 'in' ? 'alert-success' :
+        json.status === 'out' ? 'alert-info' :
+        json.status === 'not_found' ? 'alert-danger' :
+        json.status === 'already' ? 'alert-warning' :
+        'alert-danger';
+
+      msgDiv.innerHTML =
+        `<div class="alert-dark ${cls}">${esc(json.message)}</div>`;
+    } catch {
+      msgDiv.innerHTML =
+        `<div class="alert-dark alert-danger">Network error</div>`;
     }
 
     barcodeInput.value = '';
     barcodeInput.focus();
   });
 
-  function esc(s) { return String(s).replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;'); }
+  function esc(s) {
+    return String(s)
+      .replace(/&/g, '&amp;')
+      .replace(/</g, '&lt;')
+      .replace(/>/g, '&gt;');
+  }
 </script>
+
 </body>
 </html>
