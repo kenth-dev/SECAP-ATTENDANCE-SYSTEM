@@ -1,7 +1,4 @@
-/* ========================================
-   SECAP ATTENDANCE SYSTEM — Global Styles
-   Dark theme with dark blue/black gradient
-   ======================================== */
+@import url('https://fonts.googleapis.com/css2?family=Poppins:wght@400;600;700&display=swap');
 
 /* ---------- Reset & Base ---------- */
 *,
@@ -13,7 +10,7 @@
 }
 
 body {
-  font-family: "Segoe UI", Inter, Arial, sans-serif;
+  font-family: 'Poppins', 'Segoe UI', Inter, Arial, sans-serif;
   background: 
     linear-gradient(160deg, rgba(0,0,0,0.55) 0%, rgba(20,20,30,0.45) 60%, rgba(0,0,0,0.65) 100%),
     url('assets/blue-gradient-bg.jpg') no-repeat center center fixed;

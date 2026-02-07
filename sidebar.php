@@ -7,7 +7,7 @@
 <aside class="sidebar">
 
   <div class="sidebar-brand">
-    <img src="secap.png" alt="SECAP">
+    <img src="assets/secap.png" alt="SECAP">
     <span><h2><strong>SECAP</strong></h2><small>Attendance System</small></span>
   </div>
 
@@ -43,7 +43,7 @@
   </ul>
 
   <div class="sidebar-footer">
-    &copy; <?php echo date('Y'); ?> SECAP
+    &copy; <?php echo date('Y'); ?> SECAP - @kenth-dev
   </div>
 
 </aside>

@@ -49,9 +49,6 @@ $active_page = 'home';
             Time Out
           </a>
         </div>
-        <div class="mode-indicator <?php echo ($current_mode === 'time_in') ? 'mode-in' : 'mode-out'; ?>">
-          <?php echo ($current_mode === 'time_in') ? '● TIME IN MODE' : '● TIME OUT MODE'; ?>
-        </div>
         <form method="POST" id="scanForm" autocomplete="off" class="home-form">
           <input type="hidden" id="modeInput" name="mode" value="<?php echo htmlspecialchars($current_mode); ?>">
           <input type="text" id="barcode" name="barcode" class="scan-input" placeholder="Scan barcode here..." autofocus autocomplete="off" />
@@ -78,7 +75,7 @@ $active_page = 'home';
   max-width: 420px;
   width: 100%;
   min-width: 320px;
-  min-height: 460px;
+  min-height: 450px;
   margin: 0 auto;
   padding: 36px 32px 32px 32px;
   display: flex;
@@ -131,16 +128,16 @@ $active_page = 'home';
   letter-spacing: 0.5px;
 }
 .modern-mode-toggle a.active-in {
-  background: linear-gradient(90deg, #3b82f6 0%, #6366f1 100%);
+  background: linear-gradient(90deg, #059669 0%, #16a34a 100%);
   color: #fff;
-  border-color: #6366f1;
-  box-shadow: 0 2px 12px rgba(99,102,241,0.18);
+  border-color: #16a34a;
+  box-shadow: 0 2px 12px rgba(22,163,74,0.18);
 }
 .modern-mode-toggle a.active-out {
-  background: linear-gradient(90deg, #f43f5e 0%, #f59e42 100%);
+  background: linear-gradient(90deg, #b91c1c 0%, #ea580c 100%);
   color: #fff;
-  border-color: #f43f5e;
-  box-shadow: 0 2px 12px rgba(244,63,94,0.13);
+  border-color: #b91c1c;
+  box-shadow: 0 2px 12px rgba(185,28,28,0.13);
 }
 .modern-mode-toggle a:hover:not(.active-in):not(.active-out) {
   background: rgba(255,255,255,0.13);
