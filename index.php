@@ -55,15 +55,15 @@ $active_page = 'home';
           <div class="action-row">
             <button type="submit" class="btn-primary-dark submit-btn-centered">Submit</button>
           </div>
-          <div class="info-note" style="margin:8px 0 0 0;color:#94a3b8;font-size:13px;text-align:center;">
-            <svg width="16" height="16" viewBox="0 0 20 20" fill="none" style="vertical-align:middle;margin-right:6px;"><circle cx="10" cy="10" r="9" stroke="#94a3b8" stroke-width="1.5"/><path d="M10 6v2m0 2v4" stroke="#94a3b8" stroke-width="1.5" stroke-linecap="round"/></svg>
+          <div class="info-note" style="margin:8px 0 0 0;color:#94a3b8;font-size:11px;text-align:center;">
+            <svg width="13" height="13" viewBox="0 0 20 20" fill="none" style="vertical-align:top;margin-right:4px;"><circle cx="10" cy="10" r="9" stroke="#94a3b8" stroke-width="1.5"/><path d="M10 6v2m0 2v4" stroke="#94a3b8" stroke-width="1.5" stroke-linecap="round"/></svg>
             <span>If you type the ID manually, use this format:</span><br>
-            <span style="display:inline-block;margin-top:4px;font-size:12px;letter-spacing:0.5px;">
+            <span style="display:inline-block;margin-top:4px;font-size:11px;letter-spacing:0.5px;">
               <span style="color:#64748b;">[00</span>
               <span style="color:#e2e8f0;background:#222;padding:2px 6px;border-radius:4px;font-weight:600;">ID NUMBER</span>
               <span style="color:#64748b;">0] </span>
             </span>
-            <span style="font-size:13px;color:#94a3b8;">Example: <b>0023037240</b></span>
+            <span style="font-size:11px;color:#94a3b8;">Example: <b>0023037240</b></span>
           </div>
         </form>
         <div id="scanMessage" class="fixed-notification">
@@ -114,7 +114,7 @@ $active_page = 'home';
   .fixed-notification {
     position: absolute;
     left: 50%;
-    top: -100px;
+    top: -115px;
     transform: translateX(-50%);
     min-width: 320px;
     max-width: 420px;
