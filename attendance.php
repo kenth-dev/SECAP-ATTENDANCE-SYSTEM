@@ -8,7 +8,9 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['reset_today'])) {
   $stmt = $conn->prepare("DELETE FROM attendance WHERE DATE(scan_time) = ?");
   $stmt->bind_param("s", $date_filter);
   if ($stmt->execute()) {
-    $reset_msg = "Attendance for $date_filter has been reset.";
+    // Reset AUTO_INCREMENT to 1
+    $conn->query("ALTER TABLE attendance AUTO_INCREMENT = 1");
+    $reset_msg = "Attendance for $date_filter has been reset and numbering restarted.";
   } else {
     $reset_msg = "Error resetting attendance.";
   }
