@@ -3,7 +3,6 @@ require 'db.php';
 
 $msg = '';
 
-// Delete student
 // Delete all students
 if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['delete_all_students'])) {
   if ($conn->query("DELETE FROM students")) {
@@ -12,6 +11,8 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['delete_all_students']
     $msg = "Error deleting all students.";
   }
 }
+
+// Delete student
 if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['delete_student'])) {
   $del_id = trim($_POST['delete_student']);
   if ($del_id !== '') {
@@ -40,235 +41,142 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['student_id'])) {
     }
 }
 
-// Fetch students
-$res = $conn->query("SELECT * FROM students ORDER BY name ASC");
+// Pagination
+$per_page = 10;
+$page = max(1, intval($_GET['page'] ?? 1));
+$total_res = $conn->query("SELECT COUNT(*) AS cnt FROM students");
+$total_rows = $total_res->fetch_assoc()['cnt'];
+$total_pages = max(1, ceil($total_rows / $per_page));
+$page = min($page, $total_pages);
+$offset = ($page - 1) * $per_page;
+
+// Fetch students (paginated)
+$res = $conn->query("SELECT * FROM students ORDER BY name ASC LIMIT $per_page OFFSET $offset");
+$active_page = 'students';
 ?>
 <!doctype html>
-<html>
+<html lang="en">
 <head>
 <meta charset="utf-8">
-<title>Students</title>
-<link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css" rel="stylesheet">
-
-<style>
-body{
-    padding:30px;
-    background:linear-gradient(135deg,#0d2c54,#143b73);
-    color:#fff;
-    font-family:"Segoe UI",Arial,sans-serif;
-}
-
-.container{
-    max-width:900px;
-}
-
-.logo-holder{
-    text-align:center;
-    margin-bottom:20px;
-}
-
-.logo-holder img{
-    width:120px;
-    border-radius:50%;
-    box-shadow:0 6px 18px rgba(0,0,0,.4);
-}
-
-h1{
-    text-align:center;
-    font-weight:700;
-    margin-bottom:25px;
-}
-
-.card{
-    background:#fff;
-    border:none;
-    border-radius:18px;
-    box-shadow:0 10px 30px rgba(0,0,0,.35);
-    color:#222;
-}
-
-.card h5{
-    font-weight:700;
-    margin-bottom:15px;
-}
-
-.form-control{
-    background:#f1f4f9;
-    border:2px solid #d1d9e6;
-    border-radius:12px;
-    padding:10px;
-}
-
-.form-control:focus{
-    border-color:#143b73;
-    box-shadow:none;
-}
-
-.btn{
-    border-radius:12px;
-    font-weight:600;
-}
-
-.btn-warning{
-    background:#143b73;
-    border:none;
-    color:#fff;
-}
-
-.btn-warning:hover{
-    background:#0d2c54;
-}
-
-.alert{
-    border-radius:12px;
-    font-weight:600;
-}
-
-.table{
-    border-radius:14px;
-    overflow:hidden;
-}
-
-.table thead{
-    background:#143b73;
-}
-
-.table thead th{
-    color:#fff;
-    border:none;
-}
-
-.table tbody tr{
-    background:#f8fafc;
-    color:#222;
-}
-
-.table tbody tr:nth-child(even){
-    background:#eef2f7;
-}
-
-.table td{
-    border:none;
-}
-
-.btn-danger{
-    border-radius:10px;
-}
-
-.btn-light{
-    border-radius:12px;
-}
-
-.actions{
-    margin-top:15px;
-}
-</style>
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Students — SECAP Attendance</title>
+<link rel="stylesheet" href="style.css">
 </head>
-
 <body>
+<div class="app-wrapper">
 
-<div class="container">
+  <?php include 'sidebar.php'; ?>
 
-  <!-- LOGO -->
-  <div class="logo-holder">
-    <img src="secap.png">
-  </div>
+  <main class="main-content">
 
-  <h1>Student Management</h1>
+    <div class="page-header">
+      <h1>Student Management</h1>
+      <p>Add, import, or remove students from the system</p>
+    </div>
 
-  <?php if ($msg): ?>
-    <div class="alert alert-info"><?php echo htmlspecialchars($msg); ?></div>
-  <?php endif; ?>
+    <?php if ($msg): ?>
+      <div class="alert-dark alert-info" style="max-width:700px;"><?php echo htmlspecialchars($msg); ?></div>
+      <div style="margin-bottom:16px;"></div>
+    <?php endif; ?>
 
-  <div class="card p-4 mb-4">
-
-    <h5>Add Student</h5>
-
-    <form method="POST" id="studentForm">
-      <div class="row">
-
-        <div class="col-md-3 mb-2">
-          <input type="text" name="student_id" class="form-control" placeholder="Student ID" required>
+    <!-- Add Student -->
+    <div class="card-dark">
+      <h5>Add Student</h5>
+      <form method="POST" id="studentForm">
+        <div class="grid-4">
+          <div>
+            <label class="form-label">Student ID</label>
+            <input type="text" name="student_id" class="form-input" placeholder="e.g. 2300247" required>
+          </div>
+          <div>
+            <label class="form-label">Full Name</label>
+            <input type="text" name="name" class="form-input" placeholder="e.g. Juan Dela Cruz" required>
+          </div>
+          <div>
+            <label class="form-label">Course</label>
+            <input type="text" name="course" class="form-input" placeholder="e.g. BSIT">
+          </div>
+          <div>
+            <label class="form-label">Year Level</label>
+            <input type="number" name="year_level" class="form-input" placeholder="e.g. 3">
+          </div>
         </div>
-
-        <div class="col-md-4 mb-2">
-          <input type="text" name="name" class="form-control" placeholder="Full name" required>
-        </div>
-
-        <div class="col-md-3 mb-2">
-          <input type="text" name="course" class="form-control" placeholder="Course">
-        </div>
-
-        <div class="col-md-2 mb-2">
-          <input type="number" name="year_level" class="form-control" placeholder="Year">
-        </div>
-
-      </div>
-    </form>
-
-    <div class="d-flex gap-2 flex-wrap actions">
-
-      <button class="btn btn-warning" type="submit" form="studentForm">Save</button>
-
-      <a href="import_students.php" class="btn btn-secondary">Import CSV</a>
-
-      <a href="index.php" class="btn btn-light">Back to Scanner</a>
-
-      <form method="POST" style="display:inline;" onsubmit="return confirm('Delete ALL students? This cannot be undone!');">
-        <input type="hidden" name="delete_all_students" value="1">
-        <button class="btn btn-danger">Delete All</button>
       </form>
-
+      <div class="action-row">
+        <button class="btn-primary-dark" type="submit" form="studentForm">
+          <svg width="16" height="16" viewBox="0 0 20 20" fill="none" style="vertical-align:middle;margin-right:6px;"><path d="M5 3.5A1.5 1.5 0 0 0 3.5 5v10A1.5 1.5 0 0 0 5 16.5h10A1.5 1.5 0 0 0 16.5 15V7.914a1.5 1.5 0 0 0-.44-1.06l-2.914-2.914A1.5 1.5 0 0 0 12.086 3.5H5Z" stroke="#e2e8f0" stroke-width="1.5"/><rect x="7" y="10" width="6" height="4" rx="1" stroke="#e2e8f0" stroke-width="1.5"/></svg>
+          Save Student
+        </button>
+        <a href="import_students.php" class="btn-secondary-dark">
+          <svg width="16" height="16" viewBox="0 0 20 20" fill="none" style="vertical-align:middle;margin-right:6px;"><path d="M10 3v10m0 0l-3.5-3.5M10 13l3.5-3.5" stroke="#e2e8f0" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/><rect x="4" y="15" width="12" height="2" rx="1" fill="#e2e8f0"/></svg>
+          Import CSV
+        </a>
+        <form method="POST" style="display:inline;" onsubmit="return confirm('Delete ALL students? This cannot be undone!');">
+          <input type="hidden" name="delete_all_students" value="1">
+          <button class="btn-danger-dark">
+            <svg width="16" height="16" viewBox="0 0 20 20" fill="none" style="vertical-align:middle;margin-right:6px;"><rect x="5" y="7" width="10" height="8" rx="2" stroke="#e2e8f0" stroke-width="1.5"/><path d="M3 7h14M8 10v3M12 10v3M7 4h6a1 1 0 0 1 1 1v2H6V5a1 1 0 0 1 1-1Z" stroke="#e2e8f0" stroke-width="1.5"/></svg>
+            Delete All
+          </button>
+        </form>
+      </div>
     </div>
 
-  </div>
-
-  <div class="card p-4">
-
-    <h5>Student List</h5>
-
-    <div class="table-responsive">
-
-      <table class="table table-sm">
-
-        <thead>
-          <tr>
-            <th>ID</th>
-            <th>Name</th>
-            <th>Course</th>
-            <th>Year</th>
-            <th>Action</th>
-          </tr>
-        </thead>
-
-        <tbody>
-
-        <?php while ($r = $res->fetch_assoc()): ?>
-
-          <tr>
-            <td><?php echo htmlspecialchars($r['student_id']); ?></td>
-            <td><?php echo htmlspecialchars($r['name']); ?></td>
-            <td><?php echo htmlspecialchars($r['course']); ?></td>
-            <td><?php echo htmlspecialchars($r['year_level']); ?></td>
-            <td>
-              <form method="POST" style="display:inline;" onsubmit="return confirm('Delete this student?');">
-                <input type="hidden" name="delete_student" value="<?php echo htmlspecialchars($r['student_id']); ?>">
-                <button class="btn btn-danger btn-sm">Delete</button>
-              </form>
-            </td>
-          </tr>
-
-        <?php endwhile; ?>
-
-        </tbody>
-
-      </table>
-
+    <!-- Student List -->
+    <div class="card-dark">
+      <h5>Student List <span class="record-count"><?php echo $total_rows; ?> student<?php echo $total_rows !== 1 ? 's' : ''; ?></span></h5>
+      <div style="overflow-x:auto;">
+        <table class="table-dark-custom">
+          <thead>
+            <tr>
+              <th>Student ID</th>
+              <th>Name</th>
+              <th>Course</th>
+              <th>Year</th>
+              <th>Action</th>
+            </tr>
+          </thead>
+          <tbody>
+          <?php while ($r = $res->fetch_assoc()): ?>
+            <tr>
+              <td><?php echo htmlspecialchars($r['student_id']); ?></td>
+              <td><?php echo htmlspecialchars($r['name']); ?></td>
+              <td><?php echo htmlspecialchars($r['course']); ?></td>
+              <td><?php echo htmlspecialchars($r['year_level']); ?></td>
+              <td>
+                <form method="POST" style="display:inline;" onsubmit="return confirm('Delete this student?');">
+                  <input type="hidden" name="delete_student" value="<?php echo htmlspecialchars($r['student_id']); ?>">
+                  <button class="btn-danger-dark btn-sm-dark">Delete</button>
+                </form>
+              </td>
+            </tr>
+          <?php endwhile; ?>
+          </tbody>
+        </table>
+      </div>
+      <?php if ($total_pages > 1): ?>
+      <div class="pagination">
+        <?php if ($page > 1): ?>
+          <a href="?page=<?php echo $page - 1; ?>" class="page-link">← Prev</a>
+        <?php endif; ?>
+        <?php
+          $start = max(1, $page - 2);
+          $end = min($total_pages, $page + 2);
+          if ($start > 1) echo '<a href="?page=1" class="page-link">1</a>';
+          if ($start > 2) echo '<span class="page-dots">…</span>';
+          for ($i = $start; $i <= $end; $i++): ?>
+            <a href="?page=<?php echo $i; ?>" class="page-link <?php echo $i === $page ? 'active' : ''; ?>"><?php echo $i; ?></a>
+          <?php endfor;
+          if ($end < $total_pages - 1) echo '<span class="page-dots">…</span>';
+          if ($end < $total_pages) echo '<a href="?page=' . $total_pages . '" class="page-link">' . $total_pages . '</a>';
+        ?>
+        <?php if ($page < $total_pages): ?>
+          <a href="?page=<?php echo $page + 1; ?>" class="page-link">Next →</a>
+        <?php endif; ?>
+      </div>
+      <?php endif; ?>
     </div>
 
-  </div>
-
+  </main>
 </div>
-
 </body>
 </html>

@@ -14,145 +14,146 @@ if (isset($_GET['mode']) && in_array($_GET['mode'], ['time_in', 'time_out'])) {
 
 $msg = '';
 $current_mode = $_SESSION['attendance_mode'];
+$active_page = 'home';
 ?>
-
 <!doctype html>
-<html>
+<html lang="en">
 <head>
   <meta charset="utf-8">
-  <title>Attendance Scanner</title>
-  <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css" rel="stylesheet">
-  <style>
-    <style>
-      body {
-          padding: 30px;
-          background: linear-gradient(135deg, #0d2c54, #143b73);
-          font-family: "Segoe UI", Arial, sans-serif;
-          color: #fff;
-      }
-
-      .container {
-          max-width: 600px;
-      }
-
-      .logo-holder {
-          padding-top: 15px;
-          text-align: center;
-          margin-bottom: 25px;
-      }
-
-      .logo-holder img {
-          width: 140px;
-          border-radius: 50%;
-          box-shadow: 0 6px 18px rgba(0,0,0,0.4);
-      }
-
-      h1 {
-          text-align: center;
-          font-weight: 700;
-          letter-spacing: 1px;
-      }
-
-      .card {
-          background: #ffffff;
-          border: none;
-          border-radius: 18px;
-          box-shadow: 0 10px 30px rgba(0,0,0,0.35);
-          color: #222;
-      }
-
-      .form-label {
-          font-weight: 600;
-      }
-
-      input {
-          background: #f1f4f9;
-          border: 2px solid #d1d9e6;
-          border-radius: 12px;
-          padding: 14px;
-          font-size: 22px;
-      }
-
-      input:focus {
-          border-color: #143b73;
-          box-shadow: none;
-      }
-
-      .btn-group a {
-          border-radius: 14px !important;
-          font-size: 20px;
-      }
-
-      .btn-warning {
-          background: #143b73;
-          border: none;
-          color: #fff;
-          font-weight: 600;
-          padding: 10px 22px;
-          border-radius: 12px;
-      }
-
-      .btn-warning:hover {
-          background: #0d2c54;
-      }
-
-      .btn-secondary, .btn-success {
-          border-radius: 12px;
-      }
-
-        .alert {
-          border-radius: 12px;
-          font-weight: 600;
-        }
-
-
-  </style>
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Home — SECAP Attendance</title>
+  <link rel="stylesheet" href="style.css">
 </head>
 <body>
-<div class="container">
-  <div class="logo-holder">
-  <img src="secap.png" alt="SECAP Logo">
-</div>
+<div class="app-wrapper">
 
-<h1 class="mb-3">Attendance System</h1>
+  <?php include 'sidebar.php'; ?>
 
-  <!-- Mode Selection Buttons -->
-  <div class="mb-4">
-    <div class="btn-group w-100" role="group">
-      <a href="?mode=time_in" class="btn btn-lg <?php echo ($current_mode === 'time_in') ? 'btn-success' : 'btn-outline-success'; ?>" style="font-weight: 600; flex: 1;">
-        ✓ TIME IN
-      </a>
-      <a href="?mode=time_out" class="btn btn-lg <?php echo ($current_mode === 'time_out') ? 'btn-danger' : 'btn-outline-danger'; ?>" style="font-weight: 600; flex: 1;">
-        ✗ TIME OUT
-      </a>
-    </div>
-    <div style="text-align: center; margin-top: 10px; font-size: 18px; font-weight: bold; color: <?php echo ($current_mode === 'time_in') ? '#40c057' : '#ff6b6b'; ?>;">
-      <span><?php echo ($current_mode === 'time_in') ? 'TIME IN' : 'TIME OUT'; ?></span>
-    </div>
-  </div>
-
-  <div class="card p-3 mb-3">
-    <form method="POST" id="scanForm" autocomplete="off">
-      <input type="hidden" id="modeInput" name="mode" value="<?php echo htmlspecialchars($current_mode); ?>">
-      <div class="mb-2">
-        <label for="barcode" class="form-label">Scan Student ID</label>
-        <input type="text" id="barcode" name="barcode" class="form-control form-control-lg" placeholder="Scan here..." autofocus autocomplete="off" />
-      </div>
-      <div>
-        <button type="submit" class="btn btn-warning">Submit</button>
-        <a href="students.php" class="btn btn-secondary">Students</a>
-        <a href="attendance.php" class="btn btn-secondary">Attendance Log</a>
-        <a href="export.php" class="btn btn-success">Export CSV</a>
-      </div>
-    </form>
-    <div class="mt-3">
-      <div id="scanMessage">
-        <?php if ($msg): ?>
-          <div class="alert alert-light"><?php echo htmlspecialchars($msg); ?></div>
-        <?php endif; ?>
+  <main class="main-content">
+    <div class="center-home">
+      <div class="card-dark home-card">
+        <div class="home-header">
+          <img src="secap.png" alt="SECAP Logo" class="home-logo">
+          <div>
+            <h1 class="home-title">Attendance Scanner</h1>
+            <p class="home-desc">Scan student barcodes to record attendance</p>
+          </div>
+        </div>
+        <div class="mode-toggle modern-mode-toggle">
+          <a href="?mode=time_in" class="<?php echo ($current_mode === 'time_in') ? 'active-in' : ''; ?>">
+            <svg width="18" height="18" viewBox="0 0 20 20" fill="none" style="vertical-align:middle;margin-right:7px;"><path d="M10 2.5l7.5 7.5-1.42 1.42L16 10.34V17.5a.5.5 0 0 1-.5.5h-3a.5.5 0 0 1-.5-.5v-3a.5.5 0 0 0-.5-.5h-2a.5.5 0 0 0-.5.5v3a.5.5 0 0 1-.5.5h-3a.5.5 0 0 1-.5-.5V10.34l-.08.08L2.5 10 10 2.5z" stroke="#fff" stroke-width="1.5" fill="none"/></svg>
+            Time In
+          </a>
+          <a href="?mode=time_out" class="<?php echo ($current_mode === 'time_out') ? 'active-out' : ''; ?>">
+            <svg width="18" height="18" viewBox="0 0 20 20" fill="none" style="vertical-align:middle;margin-right:7px;"><circle cx="10" cy="10" r="7.5" stroke="#fff" stroke-width="1.5" fill="none"/><path d="M7 10h6" stroke="#fff" stroke-width="1.5" stroke-linecap="round"/></svg>
+            Time Out
+          </a>
+        </div>
+        <div class="mode-indicator <?php echo ($current_mode === 'time_in') ? 'mode-in' : 'mode-out'; ?>">
+          <?php echo ($current_mode === 'time_in') ? '● TIME IN MODE' : '● TIME OUT MODE'; ?>
+        </div>
+        <form method="POST" id="scanForm" autocomplete="off" class="home-form">
+          <input type="hidden" id="modeInput" name="mode" value="<?php echo htmlspecialchars($current_mode); ?>">
+          <input type="text" id="barcode" name="barcode" class="scan-input" placeholder="Scan barcode here..." autofocus autocomplete="off" />
+          <div class="action-row">
+            <button type="submit" class="btn-primary-dark" style="width:100%;font-size:1.1em;">Submit</button>
+          </div>
+        </form>
+        <div id="scanMessage" style="margin-top:16px;">
+          <?php if ($msg): ?>
+            <div class="alert-dark alert-info"><?php echo htmlspecialchars($msg); ?></div>
+          <?php endif; ?>
+        </div>
       </div>
     </div>
-  </div>
+  </main>
+<style>
+.center-home {
+  min-height: 100vh;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+.home-card {
+  max-width: 420px;
+  width: 100%;
+  margin: 0 auto;
+  padding: 36px 32px 32px 32px;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  box-shadow: 0 8px 32px 0 rgba(0,0,0,0.18);
+}
+.home-header {
+  display: flex;
+  align-items: center;
+  gap: 18px;
+  margin-bottom: 18px;
+}
+.home-logo {
+  width: 54px;
+  height: 54px;
+  border-radius: 50%;
+  box-shadow: 0 2px 10px rgba(0,0,0,0.18);
+}
+.home-title {
+  font-size: 1.6em;
+  font-weight: 700;
+  color: #fff;
+  margin: 0 0 2px 0;
+}
+.home-desc {
+  font-size: 1em;
+  color: #94a3b8;
+  margin: 0;
+}
+.modern-mode-toggle {
+  display: flex;
+  gap: 10px;
+  width: 100%;
+  margin-bottom: 18px;
+}
+.modern-mode-toggle a {
+  flex: 1;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 12px 0;
+  border-radius: 12px;
+  font-size: 1.08em;
+  font-weight: 600;
+  background: rgba(255,255,255,0.07);
+  color: #fff;
+  border: 1.5px solid transparent;
+  transition: all 0.18s;
+  letter-spacing: 0.5px;
+}
+.modern-mode-toggle a.active-in {
+  background: linear-gradient(90deg, #3b82f6 0%, #6366f1 100%);
+  color: #fff;
+  border-color: #6366f1;
+  box-shadow: 0 2px 12px rgba(99,102,241,0.18);
+}
+.modern-mode-toggle a.active-out {
+  background: linear-gradient(90deg, #f43f5e 0%, #f59e42 100%);
+  color: #fff;
+  border-color: #f43f5e;
+  box-shadow: 0 2px 12px rgba(244,63,94,0.13);
+}
+.modern-mode-toggle a:hover:not(.active-in):not(.active-out) {
+  background: rgba(255,255,255,0.13);
+  color: #e2e8f0;
+}
+.home-form {
+  width: 100%;
+  margin-top: 10px;
+}
+@media (max-width: 600px) {
+  .home-card { padding: 18px 6vw; }
+  .home-header { flex-direction: column; gap: 8px; }
+  .home-logo { width: 44px; height: 44px; }
+}
+</style>
 </div>
 
 <script>
@@ -164,7 +165,6 @@ $current_mode = $_SESSION['attendance_mode'];
   window.onload = () => { barcodeInput.focus(); };
   window.addEventListener('click', () => barcodeInput.focus());
 
-  // Use AJAX to submit scans and show immediate messages without reloading
   form.addEventListener('submit', async (e) => {
     e.preventDefault();
     const code = barcodeInput.value.trim();
@@ -177,19 +177,21 @@ $current_mode = $_SESSION['attendance_mode'];
       const resp = await fetch('scan.php', { method: 'POST', body: data });
       const json = await resp.json();
 
-      const alertClass = json.status === 'in' ? 'alert-success' : (json.status === 'out' ? 'alert-info' : (json.status === 'not_found' ? 'alert-danger' : (json.status === 'already' ? 'alert-warning' : 'alert-danger')));
-      msgDiv.innerHTML = `<div class="alert ${alertClass}">${escapeHtml(json.message)}</div>`;
-
-      // big-name overlay removed: only show message in the scanMessage area
+      const cls = json.status === 'in' ? 'alert-success'
+                : json.status === 'out' ? 'alert-info'
+                : json.status === 'not_found' ? 'alert-danger'
+                : json.status === 'already' ? 'alert-warning'
+                : 'alert-danger';
+      msgDiv.innerHTML = `<div class="alert-dark ${cls}">${esc(json.message)}</div>`;
     } catch (err) {
-      msgDiv.innerHTML = `<div class="alert alert-danger">Network error</div>`;
+      msgDiv.innerHTML = `<div class="alert-dark alert-danger">Network error</div>`;
     }
 
     barcodeInput.value = '';
     barcodeInput.focus();
   });
 
-  function escapeHtml(s){ return String(s).replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;'); }
+  function esc(s) { return String(s).replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;'); }
 </script>
 </body>
 </html>
