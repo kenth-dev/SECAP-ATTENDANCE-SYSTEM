@@ -53,14 +53,14 @@ if ($mode === 'time_out') {
         $upd = $conn->prepare("UPDATE attendance SET time_out = NOW() WHERE id = ?");
         $upd->bind_param("i", $rowExist['id']);
         if ($upd->execute()) {
-            echo json_encode(['status' => 'out', 'message' => 'Time OUT recorded for ' . $name . ' at ' . date('Y-m-d H:i:s'), 'student_name' => $name]);
+            echo json_encode(['status' => 'out', 'message' => 'TIME OUT recorded for ' . $name . ' at ' . date('Y-m-d H:i:s'), 'student_name' => $name]);
             exit;
         } else {
             echo json_encode(['status' => 'error', 'message' => 'Error saving time out', 'student_name' => $name]);
             exit;
         }
     } else {
-        echo json_encode(['status' => 'error', 'message' => 'No active Time IN record found for ' . $name . ' today', 'student_name' => $name]);
+        echo json_encode(['status' => 'error', 'message' => 'No active TIME IN record found for ' . $name . ' today', 'student_name' => $name]);
         exit;
     }
 }
@@ -82,7 +82,7 @@ if ($res2->num_rows > 0) {
 $stmt3 = $conn->prepare("INSERT INTO attendance (student_id, scan_time) VALUES (?, NOW())");
 $stmt3->bind_param("s", $id);
 if ($stmt3->execute()) {
-    echo json_encode(['status' => 'in', 'message' => 'Time IN recorded for ' . $name . ' at ' . date('Y-m-d H:i:s'), 'student_name' => $name]);
+    echo json_encode(['status' => 'in', 'message' => 'TIME IN recorded for ' . $name . ' at ' . date('Y-m-d H:i:s'), 'student_name' => $name]);
     exit;
 } else {
     echo json_encode(['status' => 'error', 'message' => 'Error saving attendance', 'student_name' => null]);
