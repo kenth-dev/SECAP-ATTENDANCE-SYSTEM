@@ -103,11 +103,11 @@ $active_page = 'students';
           </div>
           <div>
             <label class="form-label">Full Name</label>
-            <input type="text" name="name" class="form-input" placeholder="e.g. Juan Dela Cruz" required>
+            <input type="text" name="name" class="form-input" placeholder="e.g. Kenneth Gasmen" required>
           </div>
           <div>
             <label class="form-label">Course</label>
-            <input type="text" name="course" class="form-input" placeholder="e.g. BSIT">
+            <input type="text" name="course" class="form-input" placeholder="e.g. BSCS">
           </div>
           <div>
             <label class="form-label">Year Level</label>

@@ -1,3 +1,16 @@
+.filter-date-btn {
+  min-width: 120px;
+  white-space: nowrap;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+}
+/* Removed .filter-date-btn (not used in current UI) */
+/* ========================================
+  SECAP ATTENDANCE SYSTEM — Global Styles
+  Dark theme with dark blue/black gradient
+  ======================================== */
+
 @import url('https://fonts.googleapis.com/css2?family=Poppins:wght@400;600;700&display=swap');
 
 /* ---------- Reset & Base ---------- */
@@ -11,30 +24,31 @@
 
 body {
   font-family: 'Poppins', 'Segoe UI', Inter, Arial, sans-serif;
-  background: 
-    linear-gradient(160deg, rgba(0,0,0,0.55) 0%, rgba(20,20,30,0.45) 60%, rgba(0,0,0,0.65) 100%),
-    url('assets/blue-gradient-bg.jpg') no-repeat center center fixed;
-  background-size: cover;
-  color: #e2e8f0;
-  min-height: 100vh;
-  overflow-x: hidden;
+/* Removed unused controls-row-bar, card-controls-bar, controls-form-bar, controls-actions-right */
+.controls-row-bar {
+  width: 100%;
+  justify-content: space-between;
 }
-
-/* Removed body::before overlay, now handled in background property */
-
-a {
-  text-decoration: none;
-}
-
-/* ---------- Layout ---------- */
-.app-wrapper {
+.card-controls-bar {
   display: flex;
-  min-height: 100vh;
+  flex-direction: column;
+  align-items: stretch;
+  justify-content: center;
+  margin-bottom: 16px;
+  padding-bottom: 8px;
 }
-
-/* ---------- Sidebar ---------- */
-
-.sidebar {
+.controls-form-bar {
+  display: flex;
+  flex-direction: row;
+  align-items: center;
+  gap: 0;
+}
+.controls-actions-right {
+  display: flex;
+  flex-direction: row;
+  align-items: center;
+  gap: 12px;
+}
   position: fixed;
   top: 0;
   left: 0;
@@ -53,11 +67,12 @@ a {
 }
 
 .sidebar-brand {
-  display: flex;
-  align-items: center;
+/* Removed unused controls-row .form-input */
+.grid-4 {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(180px, 1fr));
   gap: 12px;
-  padding: 24px 20px 20px;
-  border-bottom: 1px solid rgba(255, 255, 255, 0.06);
+}
 }
 
 .sidebar-brand img {
@@ -342,14 +357,6 @@ a {
   font-weight: 600;
   color: #94a3b8;
   margin-bottom: 6px;
-}
-
-.filter-date-btn {
-  min-width: 140px;
-  white-space: nowrap;
-  display: inline-flex;
-  align-items: center;
-  justify-content: center;
 }
 
 /* ---------- Scan Input (large) ---------- */
