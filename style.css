@@ -344,6 +344,14 @@ a {
   margin-bottom: 6px;
 }
 
+.filter-date-btn {
+  min-width: 140px;
+  white-space: nowrap;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+}
+
 /* ---------- Scan Input (large) ---------- */
 .scan-input {
   background: rgba(255, 255, 255, 0.05);
@@ -459,13 +467,44 @@ a {
 }
 
 /* ---------- Controls Row ---------- */
+
 .controls-row {
   display: flex;
-  flex-wrap: wrap;
-  gap: 10px;
+  flex-wrap: nowrap;
   align-items: center;
-  margin-bottom: 20px;
+  justify-content: space-between;
+  width: 100%;
+  margin-bottom: 0;
 }
+
+.controls-row-bar {
+  width: 100%;
+  justify-content: space-between;
+}
+
+.card-controls-bar {
+  display: flex;
+  flex-direction: column;
+  align-items: stretch;
+  justify-content: center;
+  margin-bottom: 16px;
+  padding-bottom: 8px;
+}
+
+.controls-form-bar {
+  display: flex;
+  flex-direction: row;
+  align-items: center;
+  gap: 0;
+}
+
+.controls-actions-right {
+  display: flex;
+  flex-direction: row;
+  align-items: center;
+  gap: 12px;
+}
+
 
 .controls-row .form-input {
   width: auto;

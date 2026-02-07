@@ -47,8 +47,13 @@ $search = trim($_GET['search'] ?? '');
 $per_page = 10;
 $page = max(1, intval($_GET['page'] ?? 1));
 if ($search !== '') {
-  $search_sql = $conn->real_escape_string($search);
-  $where = "WHERE student_id LIKE '%$search_sql%' OR name LIKE '%$search_sql%' OR course LIKE '%$search_sql%'";
+  $search_words = preg_split('/\s+/', $search);
+  $where_clauses = [];
+  foreach ($search_words as $word) {
+    $word_sql = $conn->real_escape_string($word);
+    $where_clauses[] = "(LOWER(student_id) LIKE '%$word_sql%' OR LOWER(name) LIKE '%$word_sql%' OR LOWER(course) LIKE '%$word_sql%')";
+  }
+  $where = 'WHERE ' . implode(' AND ', $where_clauses);
 } else {
   $where = '';
 }
@@ -88,7 +93,7 @@ $active_page = 'students';
     <?php endif; ?>
 
     <!-- Add Student -->
-    <div class="card-dark">
+    <div class="card-dark" id="student-list">
       <h5>Add Student</h5>
       <form method="POST" id="studentForm">
         <div class="grid-4">
@@ -119,13 +124,10 @@ $active_page = 'students';
           <svg width="16" height="16" viewBox="0 0 20 20" fill="none" style="vertical-align:middle;margin-right:6px;"><path d="M10 3v10m0 0l-3.5-3.5M10 13l3.5-3.5" stroke="#e2e8f0" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/><rect x="4" y="15" width="12" height="2" rx="1" fill="#e2e8f0"/></svg>
           Import CSV
         </a>
-        <form method="POST" style="display:inline;" onsubmit="return confirm('Delete ALL students? This cannot be undone!');">
-          <input type="hidden" name="delete_all_students" value="1">
-          <button class="btn-danger-dark">
-            <svg width="16" height="16" viewBox="0 0 20 20" fill="none" style="vertical-align:middle;margin-right:6px;"><rect x="5" y="7" width="10" height="8" rx="2" stroke="#e2e8f0" stroke-width="1.5"/><path d="M3 7h14M8 10v3M12 10v3M7 4h6a1 1 0 0 1 1 1v2H6V5a1 1 0 0 1 1-1Z" stroke="#e2e8f0" stroke-width="1.5"/></svg>
-            Delete All
-          </button>
-        </form>
+        <button class="btn-danger-dark" type="button" onclick="document.getElementById('studentForm').reset();">
+          <svg width="16" height="16" viewBox="0 0 20 20" fill="none" style="vertical-align:middle;margin-right:6px;"><rect x="5" y="7" width="10" height="8" rx="2" stroke="#e2e8f0" stroke-width="1.5"/><path d="M3 7h14M8 10v3M12 10v3M7 4h6a1 1 0 0 1 1 1v2H6V5a1 1 0 0 1 1-1Z" stroke="#e2e8f0" stroke-width="1.5"/></svg>
+          Delete
+        </button>
       </div>
     </div>
 
@@ -172,22 +174,25 @@ $active_page = 'students';
       </div>
       <?php if ($total_pages > 1): ?>
       <div class="pagination">
+        <?php 
+          $search_qs = $search !== '' ? '&search=' . urlencode($search) : '';
+        ?>
         <?php if ($page > 1): ?>
-          <a href="?page=<?php echo $page - 1; ?>" class="page-link">← Prev</a>
+          <a href="?page=<?php echo $page - 1; ?><?php echo $search_qs; ?>#student-list" class="page-link">← Prev</a>
         <?php endif; ?>
         <?php
           $start = max(1, $page - 2);
           $end = min($total_pages, $page + 2);
-          if ($start > 1) echo '<a href="?page=1" class="page-link">1</a>';
+          if ($start > 1) echo '<a href="?page=1' . $search_qs . '#student-list" class="page-link">1</a>';
           if ($start > 2) echo '<span class="page-dots">…</span>';
           for ($i = $start; $i <= $end; $i++): ?>
-            <a href="?page=<?php echo $i; ?>" class="page-link <?php echo $i === $page ? 'active' : ''; ?>"><?php echo $i; ?></a>
+            <a href="?page=<?php echo $i; ?><?php echo $search_qs; ?>#student-list" class="page-link <?php echo $i === $page ? 'active' : ''; ?>"><?php echo $i; ?></a>
           <?php endfor;
           if ($end < $total_pages - 1) echo '<span class="page-dots">…</span>';
-          if ($end < $total_pages) echo '<a href="?page=' . $total_pages . '" class="page-link">' . $total_pages . '</a>';
+          if ($end < $total_pages) echo '<a href="?page=' . $total_pages . $search_qs . '#student-list" class="page-link">' . $total_pages . '</a>';
         ?>
         <?php if ($page < $total_pages): ?>
-          <a href="?page=<?php echo $page + 1; ?>" class="page-link">Next →</a>
+          <a href="?page=<?php echo $page + 1; ?><?php echo $search_qs; ?>#student-list" class="page-link">Next →</a>
         <?php endif; ?>
       </div>
       <?php endif; ?>
