@@ -36,7 +36,7 @@ $active_page = 'home';
           <img src="secap.png" alt="SECAP Logo" class="home-logo">
           <div>
             <h1 class="home-title">Attendance Scanner</h1>
-            <p class="home-desc">Scan student barcodes to record attendance</p>
+            <p class="home-desc">Scan student barcodes</p>
           </div>
         </div>
         <div class="mode-toggle modern-mode-toggle">
@@ -59,7 +59,7 @@ $active_page = 'home';
             <button type="submit" class="btn-primary-dark" style="width:100%;font-size:1.1em;">Submit</button>
           </div>
         </form>
-        <div id="scanMessage" style="margin-top:16px;">
+        <div id="scanMessage" style="margin-top:16px; min-height:38px; display:flex; align-items:center; justify-content:center;">
           <?php if ($msg): ?>
             <div class="alert-dark alert-info"><?php echo htmlspecialchars($msg); ?></div>
           <?php endif; ?>
@@ -77,6 +77,8 @@ $active_page = 'home';
 .home-card {
   max-width: 420px;
   width: 100%;
+  min-width: 320px;
+  min-height: 460px;
   margin: 0 auto;
   padding: 36px 32px 32px 32px;
   display: flex;
