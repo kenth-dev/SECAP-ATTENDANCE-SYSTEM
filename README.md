@@ -39,7 +39,7 @@ The system uses a MySQL database named `attendance_db` with the following struct
 
 ```sql
 -- Create the database
-CREATE DATABASE IF NOT EXISTS attendance_db CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci;
+CREATE DATABASE IF NOT EXISTS attendance_db;
 USE attendance_db;
 
 -- Create students table
