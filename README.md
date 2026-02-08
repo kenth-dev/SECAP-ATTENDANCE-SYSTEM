@@ -9,10 +9,7 @@ A modern, barcode-based attendance tracking solution developed for the SECAP dep
 - [System Overview](#system-overview)
 - [Database Schema](#database-schema)
 - [Installation Guide](#installation-guide)
-- [Configuration](#configuration)
 - [Usage Instructions](#usage-instructions)
-- [Barcode Scanner Setup](#barcode-scanner-setup)
-- [Customization](#customization)
 - [Troubleshooting](#troubleshooting)
 - [Contact](#contact)
 
