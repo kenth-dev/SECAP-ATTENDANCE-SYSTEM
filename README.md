@@ -45,8 +45,8 @@ USE attendance_db;
 -- Create students table
 CREATE TABLE IF NOT EXISTS students (
     student_id VARCHAR(20) PRIMARY KEY,
-    name VARCHAR(100) NOT NULL,
-    course VARCHAR(50),
+    name VARCHAR(250) NOT NULL,
+    course VARCHAR(100),
     year_level INT
 );
 
