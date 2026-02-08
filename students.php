@@ -180,7 +180,7 @@ $active_page = 'students';
               <th>Student ID</th>
               <th>Name</th>
               <th style="width:300px;">Course</th>
-              <th>Year</th>
+              <th style="text-align:center;">Year</th>
               <th>Action</th>
             </tr>
           </thead>
@@ -190,7 +190,7 @@ $active_page = 'students';
               <td><?php echo htmlspecialchars($r['student_id']); ?></td>
               <td><?php echo htmlspecialchars($r['name']); ?></td>
               <td><?php echo htmlspecialchars($r['course']); ?></td>
-              <td><?php echo htmlspecialchars($r['year_level']); ?></td>
+              <td style="text-align:center;" ><?php echo htmlspecialchars($r['year_level']); ?></td>
               <td>
                 <form method="POST" style="display:inline;" onsubmit="return confirm('Delete this student?');">
                   <input type="hidden" name="delete_student" value="<?php echo htmlspecialchars($r['student_id']); ?>">

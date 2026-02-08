@@ -128,8 +128,8 @@ $active_page = 'attendance';
               <th>Student ID</th>
               <th>Name</th>
               <th>Course</th>
-              <th>Year</th>
-              <th>Date</th>
+              <th style="text-align:center;">Year</th>
+              <th style="text-align:center;">Date</th>
               <th>Time In</th>
               <th>Time Out</th>
             </tr>
@@ -146,8 +146,8 @@ $active_page = 'attendance';
               <td><?php echo htmlspecialchars($r['student_id']); ?></td>
               <td><?php echo htmlspecialchars($r['name']); ?></td>
               <td><?php echo htmlspecialchars($r['course']); ?></td>
-              <td><?php echo htmlspecialchars($r['year_level']); ?></td>
-              <td><?php echo htmlspecialchars($date); ?></td>
+              <td style="text-align:center;"><?php echo htmlspecialchars($r['year_level']); ?></td>
+              <td style="text-align:center; width:120px;"><?php echo htmlspecialchars($date); ?></td>
               <td><span class="badge-status badge-in"><?php echo htmlspecialchars($time_in); ?></span></td>
               <td>
                 <?php if ($time_out): ?>
