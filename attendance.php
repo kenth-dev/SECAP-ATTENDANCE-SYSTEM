@@ -3,6 +3,34 @@ require 'db.php';
 
 $date_filter = $_GET['date'] ?? date('Y-m-d');
 $reset_msg = '';
+$delete_msg = '';
+
+// Delete single attendance record and renumber IDs
+if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['delete_attendance'])) {
+  $del_id = intval($_POST['delete_attendance']);
+  if ($del_id > 0) {
+    $stmt = $conn->prepare("DELETE FROM attendance WHERE id = ?");
+    $stmt->bind_param("i", $del_id);
+    if ($stmt->execute()) {
+      // Shift IDs down by 1 (two-phase to avoid duplicate key)
+      $offset = 1000000;
+      $upd1 = $conn->prepare("UPDATE attendance SET id = id + ? WHERE id > ?");
+      $upd1->bind_param("ii", $offset, $del_id);
+      $upd1->execute();
+      $upd2 = $conn->prepare("UPDATE attendance SET id = id - ? WHERE id > ?");
+      $adj = $offset + 1;
+      $upd2->bind_param("ii", $adj, $offset);
+      $upd2->execute();
+      // Reset AUTO_INCREMENT
+      $max_res = $conn->query("SELECT COALESCE(MAX(id), 0) + 1 AS next_id FROM attendance");
+      $next_id = (int) $max_res->fetch_assoc()['next_id'];
+      $conn->query("ALTER TABLE attendance AUTO_INCREMENT = $next_id");
+      $delete_msg = "Attendance record deleted.";
+    } else {
+      $delete_msg = "Error deleting attendance record.";
+    }
+  }
+}
 
 if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['reset_today'])) {
   $stmt = $conn->prepare("DELETE FROM attendance WHERE DATE(scan_time) = ?");
@@ -81,6 +109,9 @@ $active_page = 'attendance';
     <?php if ($reset_msg): ?>
       <div class="alert-dark alert-warning" style="margin-bottom:16px;"><?php echo htmlspecialchars($reset_msg); ?></div>
     <?php endif; ?>
+    <?php if ($delete_msg): ?>
+      <div class="alert-dark alert-info" style="margin-bottom:16px;"><?php echo htmlspecialchars($delete_msg); ?></div>
+    <?php endif; ?>
 
     <!-- Controls -->
     <div class="card-dark card-controls-bar">
@@ -124,7 +155,6 @@ $active_page = 'attendance';
         <table class="table-dark-custom">
           <thead>
             <tr>
-              <th>#</th>
               <th>Student ID</th>
               <th>Name</th>
               <th>Course</th>
@@ -132,6 +162,7 @@ $active_page = 'attendance';
               <th style="text-align:center;">Date</th>
               <th>Time In</th>
               <th>Time Out</th>
+              <th>Action</th>
             </tr>
           </thead>
           <tbody>
@@ -142,7 +173,6 @@ $active_page = 'attendance';
               $time_out = $r['time_out'] ? date('H:i:s', strtotime($r['time_out'])) : '';
             ?>
             <tr>
-              <td><?php echo htmlspecialchars($r['id']); ?></td>
               <td><?php echo htmlspecialchars($r['student_id']); ?></td>
               <td><?php echo htmlspecialchars($r['name']); ?></td>
               <td><?php echo htmlspecialchars($r['course']); ?></td>
@@ -155,6 +185,12 @@ $active_page = 'attendance';
                 <?php else: ?>
                   <span style="color:#475569;">—</span>
                 <?php endif; ?>
+              </td>
+              <td>
+                <form method="POST" style="display:inline;" onsubmit="return confirm('Delete this attendance record?');">
+                  <input type="hidden" name="delete_attendance" value="<?php echo (int)$r['id']; ?>">
+                  <button type="submit" class="btn-danger-dark btn-sm-dark">Delete</button>
+                </form>
               </td>
             </tr>
           <?php endwhile; ?>
