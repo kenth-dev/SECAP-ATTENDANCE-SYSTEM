@@ -11,6 +11,7 @@ A modern, barcode-based attendance tracking solution developed for the SECAP dep
 - [Installation Guide](#installation-guide)
 - [Usage Instructions](#usage-instructions)
 - [Troubleshooting](#troubleshooting)
+- [Centralized Database](#centralize-database)
 - [Contact](#contact)
 
 ---
@@ -119,6 +120,116 @@ $db   = "attendance_db";
 - **Barcode Not Scanning**: Confirm scanner is connected and working in a text editor.
 - **Duplicate/Already Marked**: Student has already timed in for the day.
 - **No Time-In Record**: Student must time in before timing out.
+
+---
+## Centralize Database
+Optional Centralized Database Setup (MySQL over LAN)
+
+This system uses a centralized MySQL database so multiple laptops share one attendance database in real time.
+
+<h3>Architecture</h3>
+
+One laptop acts as the database host.
+
+MySQL runs only on the host laptop.
+
+All client laptops connect to the host via LAN or Wi-Fi.
+
+phpMyAdmin is used only for management, not as the database itself.
+
+<h3>Requirements</h3>
+
+Same Wi-Fi or LAN network.
+
+XAMPP installed on all laptops.
+
+MySQL running on the host laptop.
+
+Network profile set to Private on the host.
+
+Host Laptop Setup
+
+Start MySQL in XAMPP.
+
+Configure MySQL to accept remote connections.
+Edit xampp/mysql/bin/my.ini:
+
+```ini
+bind-address = 0.0.0.0
+```
+
+Restart MySQL after changes.
+
+Create a remote MySQL user.
+Run in phpMyAdmin on the host:
+
+```sql
+CREATE USER 'secap'@'%' IDENTIFIED BY 'YES';
+GRANT ALL PRIVILEGES ON attendance_db.* TO 'secap'@'%';
+FLUSH PRIVILEGES;
+```
+
+Allow MySQL through Windows Firewall.
+
+TCP port: 3306
+
+Profile: Private only
+
+Get the host IPv4 address.
+
+```nginx
+ipconfig
+```
+
+
+Use this IP in all client configurations.
+
+<h2>Client Laptop Setup</h2>
+
+Do not run MySQL.
+
+Update db.php to point to the host IP.
+
+```php
+<?php
+$host = "host-laptop-IP"; // host laptop IP
+$user = "secap";
+$pass = "YES";
+$db   = "attendance_db";
+
+$conn = new mysqli($host, $user, $pass, $db);
+if ($conn->connect_error) {
+    die("Connection failed: " . $conn->connect_error);
+}
+?>
+```
+
+<h3>Test connectivity.</h3>
+
+```nginx
+ping (host-laptop-IP
+```
+
+Ping must succeed before MySQL connections will work.
+
+<h3>Common Errors</h3>
+
+HY000/2002
+Network issue. Host unreachable or MySQL not running.
+
+HY000/1045
+MySQL user not allowed from client IP or wrong credentials.
+
+
+<h3>Notes</h3>
+
+Do not use localhost on client laptops.
+
+Do not include @% in PHP usernames.
+
+Do not expose port 3306 to public networks.
+
+Back up the database regularly.
 
 ---
 
