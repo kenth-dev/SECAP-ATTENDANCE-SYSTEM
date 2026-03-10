@@ -207,7 +207,7 @@ if ($conn->connect_error) {
 <h3>Test connectivity.</h3>
 
 ```nginx
-ping (host-laptop-IP
+ping (host-laptop-IP)
 ```
 
 Ping must succeed before MySQL connections will work.
@@ -232,8 +232,3 @@ Do not expose port 3306 to public networks.
 Back up the database regularly.
 
 ---
-
-## Contact
-Created by Kenneth Gasmen and Jason Bagunu
-
-For support, refer to the Troubleshooting section or ensure all setup steps are followed.
